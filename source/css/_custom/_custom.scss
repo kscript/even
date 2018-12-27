@@ -1,0 +1,24 @@
+// ==============================
+// Custom style
+// ==============================
+// You can override the variables in _variables.scss to customize the style
+.post-content{
+  .read-more{
+    text-align: right;
+    .read-more-link{
+      font-size: 14px!important;
+      padding: 5px 10px;
+      color: #fff!important;
+      background-color: #eeb12c;
+      border-radius: 5px;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      -ms-border-radius: 5px;
+      -o-border-radius: 5px;
+      &:hover{
+        border-bottom: none!important;
+        background-color: #f3a600;
+      }
+    }
+  }
+}
