@@ -4,11 +4,11 @@
   <div class="post-copyright">
     <p class="copyright-item">
       <span>{{ __('copyright.author') + ': ' }}</span>
-      <a href="{{ config.url }}">{{ config.author }}</a>
+      <a href="{{ config.url + config.root }}">{{ config.author }}</a>
     </p>
     <p class="copyright-item">
       <span>{{ __('copyright.link') + ': ' }}</span>
-      <a href="{{ page.permalink }}">{{ page.permalink }}</a>
+      <a href="{{config.url + config.root + page.canonical_path}}">{{config.url + config.root + page.canonical_path}}</a>
     </p>
     <p class="copyright-item">
       <span>{{ __('copyright.license') + ': ' }}</span>

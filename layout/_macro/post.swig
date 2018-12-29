@@ -35,25 +35,34 @@
 
     <div class="post-content">
       <div class="content">
-      {% if is_home() %}
-        {% set excerpt = "" %}
-        {% if post.description %}
-          {% set excerpt = '<p>' + post.description + '</p>' %}
-        {% elif post.excerpt %}
-          {% set excerpt = post.excerpt %}
-        {% endif %}
+        {% if is_home() %}
+          {% set excerpt = "" %}
+          {% if post.description %}
+            {% set excerpt = '<p>' + post.description + '</p>' %}
+          {% elif post.excerpt %}
+            {% set excerpt = post.excerpt%}
+          {% endif %}
 
-        {% if excerpt %}
-          {{ excerpt }}
-          <div class="read-more">
-            <a href="{{ url_for(post.path) }}" class="read-more-link">{{ __('posts.readmore') }}</a>
-          </div>
+          {% if excerpt %}
+            <div class="excerpt">{{ excerpt }}</div>
+            <div class="read-more">
+              <span class="tag">
+                {% if post.tags and post.tags.length %}
+                  <div class="post-tags">
+                    {% for tag in post.tags %}
+                      <a href="{{ url_for(tag.path) }}">{{ tag.name }}</a>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </span>
+              <a href="{{ url_for(post.path) }}" class="read-more-link">{{ __('posts.readmore') }}</a>
+            </div>
+          {% else %}
+            {{ post.content }}
+          {% endif %}
         {% else %}
           {{ post.content }}
         {% endif %}
-      {% else %}
-        {{ post.content }}
-      {% endif %}
       </div>
       {% if not is_home() %}
         {# Post Copyright #}

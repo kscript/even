@@ -18,9 +18,9 @@ rss: default
 # ===========================================
 menu:
   Home: /
-  # Archives: /archives/
-  # Tags: /tags
-  # Categories: /categories
+  Archives: /archives/
+  Tags: /tags
+  Categories: /categories
   # About: /about
 
 # ===========================================
@@ -96,9 +96,17 @@ changyan:
   appkey: 
 
 #LiveRe
-livere_datauid:
+#livere_datauid: MTAyMC80MTg3OS8xODQyNQ==
 
 # ===========================================
 # Version
 # ===========================================
 version: 2.10.1
+
+valine:
+  appid: 59FOptHpcNJMwYdlLXwYBelP-gzGzoHsz
+  appkey: lhVI2ym7wgSKo6O7AYGm8wzf
+  notify: false # true/false:mail notify !!!Test,Caution. https://github.com/xCss/Valine/wiki/Valine-%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E9%82%AE%E4%BB%B6%E6%8F%90%E9%86%92%E8%AE%BE%E7%BD%AE
+  verify: false # true/false:verify code
+  avatar: mm # avatar style https://github.com/xCss/Valine/wiki/avatar-setting-for-valine
+  placeholder: Just go go # comment box placeholder

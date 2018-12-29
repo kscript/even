@@ -4,10 +4,33 @@
 // You can override the variables in _variables.scss to customize the style
 .post-content{
   .read-more{
-    text-align: right;
+    height: 32px;
+    line-height: 32px;
+    overflow: hidden;
+    .tag{
+      float: left;
+      .post-tags{
+        cursor: pointer;
+      }
+      a{
+        color: #ffffff;
+        font-size: 14px;
+        background: #eeb12c;
+        padding: 2px 5px;
+        border-radius: 5px;
+        word-break: break-all;
+        &:hover{
+          border-bottom: none!important;
+          background-color: #e09c07;
+        }
+      }
+    }
     .read-more-link{
+      float: right;
       font-size: 14px!important;
-      padding: 5px 10px;
+      padding: 0px 10px;
+      height: 32px;
+      line-height: 32px;
       color: #fff!important;
       background-color: #eeb12c;
       border-radius: 5px;
@@ -17,7 +40,7 @@
       -o-border-radius: 5px;
       &:hover{
         border-bottom: none!important;
-        background-color: #f3a600;
+        background-color: #e09c07;
       }
     }
   }
