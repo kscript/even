@@ -21,7 +21,7 @@
 
       @include underline-from-center;
     }
-
+    @import 'search';
     .menu-item-link {
       font-size: $menu-link-font-size;
     }

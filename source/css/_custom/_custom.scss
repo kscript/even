@@ -3,11 +3,15 @@
 // ==============================
 // You can override the variables in _variables.scss to customize the style
 .post-content{
+  .excerpt{
+    color: #999;
+  }
   .read-more{
     height: 32px;
     line-height: 32px;
     overflow: hidden;
     .tag{
+      font-size: 0;
       float: left;
       .post-tags{
         cursor: pointer;
@@ -17,6 +21,7 @@
         font-size: 14px;
         background: #eeb12c;
         padding: 2px 5px;
+        margin: 0 2px;
         border-radius: 5px;
         word-break: break-all;
         &:hover{
@@ -43,5 +48,10 @@
         background-color: #e09c07;
       }
     }
+  }
+}
+.post {
+  .post-copyright{
+    margin-top: 60px;
   }
 }

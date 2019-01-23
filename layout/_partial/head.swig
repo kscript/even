@@ -27,6 +27,8 @@
 {% if theme.pjax %}
   <link rel="stylesheet" type="text/css" href="{{ url_for('lib/nprogress/nprogress.min.css') }}" />
 {% endif %}
+{# Theme Configuration #}	
+{% include "../_script/config.swig" %}
 
 {# Theme styling #}
 <link rel="stylesheet" type="text/css" href="{{ url_for('css/style.css') }}?v={{ theme.version }}" />

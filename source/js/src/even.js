@@ -23,6 +23,8 @@
       this.pjax();
     }
     this.backToTop();
+
+    this.search();
   };
 
   Even.prototype.navbar = function () {
@@ -214,7 +216,7 @@
     this.hasPjax = true;
 
     var that = this;
-    $(document).pjax('a', 'body', { fragment: 'body' });
+    $(document).pjax('a:not(.no-pjax)', 'body', { fragment: 'body' });
     $(document).on('pjax:send', function () {
       NProgress.start();
       $('body').addClass('hide-top');
@@ -242,91 +244,81 @@
     });
   };
 
-  Even.prototype.searchFunc = function (path, search_id, content_id) {
-    'use strict'; //使用严格模式
-    $.ajax({
-      url: path,
-      dataType: "xml",
-      success: function (xmlResponse) {
-        // 从xml中获取相应的标题等数据
-        var datas = $("entry", xmlResponse).map(function () {
-          return {
-            title: $("title", this).text(),
-            content: $("content", this).text(),
-            url: $("url", this).text()
-          };
-        }).get();
-        //ID选择器
-        var $input = document.getElementById(search_id);
-        var $resultContent = document.getElementById(content_id);
-        $input.addEventListener('input', function () {
-          var str = '<ul class=\"search-result-list\">';
-          var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
-          $resultContent.innerHTML = "";
-          if (this.value.trim().length <= 0) {
-            return;
-          }
-          // 本地搜索主要部分
-          datas.forEach(function (data) {
-            var isMatch = true;
-            var content_index = [];
-            var data_title = data.title.trim().toLowerCase();
-            var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
-            var data_url = data.url;
-            var index_title = -1;
-            var index_content = -1;
-            var first_occur = -1;
-            // 只匹配非空文章
-            if (data_title != '' && data_content != '') {
-              keywords.forEach(function (keyword, i) {
-                index_title = data_title.indexOf(keyword);
-                index_content = data_content.indexOf(keyword);
-                if (index_title < 0 && index_content < 0) {
-                  isMatch = false;
-                } else {
-                  if (index_content < 0) {
-                    index_content = 0;
-                  }
-                  if (i == 0) {
-                    first_occur = index_content;
-                  }
-                }
-              });
-            }
-            // 返回搜索结果
-            if (isMatch) {
-              //结果标签
-              str += "<a href='" + data_url + "' class='search-result-title' target='_blank'>" + data_title + "</a>";
-              var content = data.content.trim().replace(/<[^>]+>/g, "");
-              if (first_occur >= 0) {
-                // 拿出含有搜索字的部分
-                var start = first_occur - 6;
-                var end = first_occur + 6;
-                if (start < 0) {
-                  start = 0;
-                }
-                if (start == 0) {
-                  end = 10;
-                }
-                if (end > content.length) {
-                  end = content.length;
-                }
-                var match_content = content.substr(start, end);
-                // 列出搜索关键字，定义class加高亮
-                keywords.forEach(function (keyword) {
-                  var regS = new RegExp(keyword, "gi");
-                  match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
-                })
-                str += "<p class=\"search-result\">" + match_content + "...</p>"
-              }
-            }
-          })
-          $resultContent.innerHTML = str;
-        })
+  Even.prototype.search = function () {
+    var _searchData = null,
+      _contentCache = $('#content').clone(true);
+    var $menuSearch = $('.menu-search'),
+      $searchInput = $('#search-input');
+    $('#open-search').click(function handleOpenSeach() {
+      $menuSearch.addClass('expanded');
+      $searchInput.focus();
+      $.ajax({
+        url: CONFIG.searchPath,
+        dataType: 'xml',
+        success: function (xmlResponse) {
+          _searchData = [];
+          $('entry', xmlResponse).each(function () {
+            $('description', this).length && _searchData.push({
+              title: $('title', this).text(),
+              content: $('content', this).text(),
+              tags: $('tags tag', this),
+              description: decodeURIComponent($('description', this).text()).replace(/\</g, '&lt;'),
+              url: decodeURIComponent($('url', this).text())
+            });
+          }).get();
+        }
+      });
+    });
+    $('#close-search').click(function handleCloseSeach() {
+      $menuSearch.removeClass('expanded');
+      $searchInput.val('');
+      _contentCache && $('#content').replaceWith(_contentCache);
+    });
+    $searchInput.on('input', function handleSearchInput() {
+      var keywords = this.value.trim();
+      if (keywords.length === 0) {
+        _contentCache && $('#content').replaceWith(_contentCache);
+        return;
       }
-    })
-  };
 
+      var keywordsRe = new RegExp(keywords, 'i');
+      var searchResult = _searchData.filter(function (item) {
+        return keywordsRe.test(item.title) || keywordsRe.test(item.content);
+      });
+      _generateSearchContent(searchResult);
+    });
+    function _generateSearchContent(searchResult) {
+      var resultTemplate = $('#search-result');
+      var noResultTemplate = $('#no-search-result');
+      var article = resultTemplate.find('article')[0];
+      var section = $('<section id="post"></section>');
+      var content = $('#content').clone(true);
+      section.addClass('search-result posts');
+      content.html('');
+      if (searchResult.length) {
+        searchResult.forEach(function (post) {
+          var $el = $(article.cloneNode(true));
+          var tags = [];
+          $el.find('header .title').text(post.title);
+          $el.find('.post-link, .read-more-link').attr('href', post.url);
+          $el.find('.description').text(post.description);
+          $el.find('.content').text(post.description);
+          post.tags.each(function () {
+            var node = document.createElement('a');
+            node.setAttribute('href', './tags/' + $(this).text());
+            node.innerText = $(this).text();
+            tags.push(node);
+          })
+          $el.find('.post-tags').html('').append(tags);
+          section.append($el);
+        });
+        content.append(section);
+      } else {
+        content.append(noResultTemplate.children().clone(true));
+      }
+      $('#content').replaceWith(content);
+    }
+  }
 
   var config = window.config;
   var even = new Even(config);
