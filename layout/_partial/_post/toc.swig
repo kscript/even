@@ -5,4 +5,7 @@
       {{ toc(page.content, {list_number: false}) }}
     </div>
   </div>
+  <div class="post-description">
+    {{ page.description }}
+  </div>
 {% endif %}
