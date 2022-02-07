@@ -258,7 +258,14 @@
         success: function (xmlResponse) {
           _searchData = [];
           $('entry', xmlResponse).each(function () {
-            $('description', this).length && _searchData.push({
+            // $('description', this).length && _searchData.push({
+            //   title: $('title', this).text(),
+            //   content: $('content', this).text(),
+            //   tags: $('tags tag', this),
+            //   description: decodeURIComponent($('description', this).text()).replace(/\</g, '&lt;'),
+            //   url: decodeURIComponent($('url', this).text())
+            // });
+            _searchData.push({
               title: $('title', this).text(),
               content: $('content', this).text(),
               tags: $('tags tag', this),

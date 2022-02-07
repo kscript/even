@@ -1,5 +1,9 @@
 {% macro render(post) %}
+  {% if post.copyright %}
   <article class="post">
+  {% else %}
+  <article class="post is-reprint">
+  {% endif %}
     <header class="post-header">
       <h1 class="post-title">
         {% if is_home() %}
