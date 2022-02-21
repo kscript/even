@@ -1,5 +1,5 @@
 {% macro render(post) %}
-  {% if post.copyright %}
+  {% if post.copyright !== false %}
   <article class="post">
   {% else %}
   <article class="post is-reprint">
